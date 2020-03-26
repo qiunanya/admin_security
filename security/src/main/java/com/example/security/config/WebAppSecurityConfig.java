@@ -2,6 +2,7 @@ package com.example.security.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.io.PrintWriter;
+import javax.sql.DataSource;
 
 /**
  * @ClassName WebAppSecurityConfig
@@ -20,22 +21,35 @@ import java.io.PrintWriter;
 @Configuration
 @EnableWebSecurity
 public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
+    /**
+    * 描述: 注入数据源
+    * @Author QiuKing
+    * @Date 2020/3/26 15:35
+    */
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private MyUserDetailsServiceImpl myUserDetailsService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
-        // 内存登录
-        builder.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
-                .withUser("qiuny")
-                .password(new BCryptPasswordEncoder().encode("123456"))
-                .roles("ADMIN")
-                .and()
-                .withUser("yangy")
-                .password(new BCryptPasswordEncoder().encode("123456"))
-                .roles("BOSS")
-                .authorities("ADD","DELETE","UPDATE","SELECT")
-                ;
+        // 1、内存登录
+//        builder.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
+//                .withUser("qiuny")
+//                .password(new BCryptPasswordEncoder().encode("123456"))
+//                .roles("ADMIN","学徒")
+//                .and()
+//                .withUser("yangy")
+//                .password(new BCryptPasswordEncoder().encode("123456"))
+//                .roles("BOSS")
+//                .authorities("ADD","DELETE","UPDATE","SELECT","内门弟子")
+//                ;
+
+        // 2、数据库登录
+        builder.userDetailsService(myUserDetailsService);
 
         // super.configure(builder);
     }
@@ -56,8 +70,13 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
         * .defaultSuccessUrl() // 默认登录成功要跳转的页面路径
         * .usernameParameter("userName").passwordParameter("passWord") // 修改默认登录表单属性字段名
         * .disable() 禁用csrf跨越请求功能，如果安全性高就可以用它
+         * .logout() 开启退出功能
+         *  .logoutUrl("/do/logout") 指定退出提交地址
+         *  .logoutSuccessUrl("/user/logoutSuccess").permitAll() 退出成功访问地址
          * login_url:  http://localhost:9999/qiu/do/login?loginName=qiuny&loginPassword=123456
          * out_url:  http://localhost:9999/qiu/do/logout
+         * .exceptionHandling() 访问拒绝开启
+         * .accessDeniedPage("/error/no/auth") 访问被拒绝访问地址
         * @Author QiuKing
         * @Date 2020/3/19 17:11
         */
@@ -66,7 +85,10 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user/test")
                 .permitAll()
-
+                .antMatchers("/user/level1")
+                .hasRole("学徒")
+                .antMatchers("/user/level2")
+                .hasAuthority("内门弟子")
                 .and()
                 .authorizeRequests()
                 .anyRequest()
@@ -83,12 +105,11 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .logout()
                 .logoutUrl("/do/logout")
-                .logoutSuccessUrl("/user/logoutSuccess").permitAll();
-//               .logoutSuccessHandler(((request, response, authentication) -> {
-//                   PrintWriter writer = response.getWriter();
-//                   writer.write("true");
-//                   writer.close();
-//               })).permitAll();
+                .logoutSuccessUrl("/user/logoutSuccess").permitAll()
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/error/no/auth")
+                ;
 
        //super.configure(security);
     }

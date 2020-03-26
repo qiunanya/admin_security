@@ -1,7 +1,7 @@
 package com.example.security.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.security.entitys.User;
+import com.example.security.entitys.UserEntity;
 import com.example.security.utils.ResultUtil;
 
 /**
@@ -10,7 +10,9 @@ import com.example.security.utils.ResultUtil;
 * @Date 2020/3/19 10:15
 */
 
-public interface IUserService extends IService<User> {
+public interface IUserService extends IService<UserEntity> {
 
     ResultUtil getList();
+
+    UserEntity findUserByName(String username);
 }

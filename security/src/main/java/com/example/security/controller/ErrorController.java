@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ErrorController {
     private org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping("/index")
+    @RequestMapping("/no/auth")
     public ResultUtil test(){
         logger.info("对不起，您没有访问权限！");
-        return  ResultUtil.success("对不起，您没有访问权限！");
+        return  ResultUtil.error("对不起，您没有访问权限！");
     }
 
 }

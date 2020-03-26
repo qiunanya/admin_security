@@ -16,6 +16,8 @@ public class ResultUtil<T> {
 
     private String msg;
 
+    private boolean success;
+
     private String test_msg;
 
     private T data;
@@ -32,6 +34,7 @@ public class ResultUtil<T> {
     public static ResultUtil success(Object data) {
         ResultUtil resultUtil = new ResultUtil();
         resultUtil.setCode(200);
+        resultUtil.setSuccess(true);
         resultUtil.setData(data);
         resultUtil.setMsg("请求成功");
         return resultUtil;
@@ -45,6 +48,7 @@ public class ResultUtil<T> {
     public static ResultUtil success(String... msg) {
         ResultUtil resultUtil = new ResultUtil();
         resultUtil.setCode(0);
+        resultUtil.setSuccess(true);
         resultUtil.setMsg(msg.toString());
         return resultUtil;
     }
@@ -57,6 +61,7 @@ public class ResultUtil<T> {
      */
     public static ResultUtil error(ResultEnum resultEnum) {
         ResultUtil resultUtil = new ResultUtil();
+        resultUtil.setSuccess(false);
         resultUtil.setCode(resultEnum.getCode());
         resultUtil.setMsg(resultEnum.getMsg());
         return resultUtil;
@@ -70,6 +75,7 @@ public class ResultUtil<T> {
      */
     public static ResultUtil error(String msg) {
         ResultUtil resultUtil = new ResultUtil();
+        resultUtil.setSuccess(false);
         resultUtil.setCode(-1);
         resultUtil.setMsg(msg);
         return resultUtil;

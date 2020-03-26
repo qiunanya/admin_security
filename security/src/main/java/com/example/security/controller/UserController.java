@@ -30,6 +30,19 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+
+    @RequestMapping("/level1")
+    public ResultUtil level1(){
+        logger.info("可以访问");
+        return ResultUtil.success("恭喜你,你是学徒可以访问level1");
+    }
+
+    @RequestMapping("/level2")
+    public ResultUtil level2(){
+        logger.info("内门弟子");
+        return ResultUtil.success("恭喜你,你是‘内门弟子’可以访问level2");
+    }
+
     @GetMapping("/list")
     public ResultUtil list() {
 
