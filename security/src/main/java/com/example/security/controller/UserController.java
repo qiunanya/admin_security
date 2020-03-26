@@ -43,5 +43,17 @@ public class UserController {
         return  ResultUtil.success("不需要登录也能访问我");
     }
 
+    @RequestMapping("/loginSuccess")
+    public ResultUtil login(){
+         logger.info("登录成功");
+        return ResultUtil.success("恭喜你,登录成功");
+    }
+
+    @RequestMapping("/logoutSuccess")
+    public ResultUtil logout(){
+        logger.info("退出成功");
+        return ResultUtil.success("退出成功");
+    }
+
 }
 

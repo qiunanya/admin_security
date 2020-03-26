@@ -42,9 +42,10 @@ public class ResultUtil<T> {
      *
      * @return
      */
-    public static ResultUtil success() {
+    public static ResultUtil success(String... msg) {
         ResultUtil resultUtil = new ResultUtil();
         resultUtil.setCode(0);
+        resultUtil.setMsg(msg.toString());
         return resultUtil;
     }
 
