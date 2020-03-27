@@ -1,8 +1,11 @@
 package com.example.security.config;
 
+import com.example.security.entitys.Permission;
+import com.example.security.entitys.Role;
 import com.example.security.entitys.UserEntity;
+import com.example.security.service.IPermissionService;
+import com.example.security.service.IRoleService;
 import com.example.security.service.IUserService;
-import com.example.security.utils.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,24 +30,50 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private IUserService iUserService;
+    @Autowired
+    private IPermissionService iPermissionService;
+    @Autowired
+    private IRoleService iRoleService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = iUserService.findUserByName(username);
-        if (!StringUtils.isEmpty(user)){
-            //1 、给用户设置角色权限信息
+        if (StringUtils.isEmpty(user)){
+            throw new UsernameNotFoundException("用户不存在");
+        }else {
+            String userId = user.getUserId();
+            // 获取角色集合
+            List<Role> roleList = iRoleService.getRoleListByUserId(userId);
+            // 获取权限集合
+            List<Permission> permissionList = iPermissionService.permissionListByUserId(userId);
+
+            //给用户设置角色权限信息
             List<GrantedAuthority> authorities = new ArrayList<>();
 
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            authorities.add(new SimpleGrantedAuthority("UPDATE"));
+            // 遍历角色
+            for (Role role : roleList){
+                String roleName = "ROLE_"+role.getRoleName();
+                SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(roleName);
+                authorities.add(simpleGrantedAuthority);
 
-            //2 、把admin对象和authorities 封装到 UserDetails中
-            String password = user.getUserPassword();
+            }
 
-           return new User(username,password,authorities);
+            // 遍历权限
+            for (Permission permission : permissionList){
+                SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(permission.getPermissionName());
+                authorities.add(simpleGrantedAuthority);
+            }
 
-        }else {
-            return null;
+//            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//            authorities.add(new SimpleGrantedAuthority("ROLE_SELECT"));
+//            authorities.add(new SimpleGrantedAuthority("UPDATE"));
+
+            // 把admin对象和authorities 封装到 UserDetails中
+//            String password = user.getUserPassword();
+//    return new User(username,password,authorities);
+            ExtendSecurityUser admin = new ExtendSecurityUser(user, authorities);
+
+            return admin;
         }
 
 

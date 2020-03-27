@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.security.mapper.PermissionMapper">
+
+    <select id="permissionListByUserId" resultType="com.example.security.entitys.Permission">
+        SELECT DISTINCT
+            p.*
+        FROM
+            permission AS p
+            LEFT JOIN role_permission AS r ON r.permission_id = p.permission_id
+            LEFT JOIN user_role AS u ON u.role_id = r.role_id
+        WHERE
+            u.user_id = #{userId}
+            AND p.permission_status = 0
+            AND u.user_role_status =0
+            AND r.role_permission_status =0
+    </select>
+
+</mapper>

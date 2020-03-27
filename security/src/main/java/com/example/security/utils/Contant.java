@@ -7,5 +7,5 @@ package com.example.security.utils;
  */
 public class Contant {
 
-    public final  static Integer ZERO=0;
+    public final static Integer ZERO=0;
 }

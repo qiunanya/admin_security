@@ -3,11 +3,25 @@ package com.example.security.controller;
 
 import com.example.security.service.IUserService;
 import com.example.security.utils.ResultUtil;
+import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import sun.plugin.liveconnect.SecurityContextHelper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
 * 描述: 用户接口
@@ -44,10 +58,10 @@ public class UserController {
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResultUtil list() {
-
         ResultUtil result = userService.getList();
-        result.setTest_msg(sorket);
+        result.setTest_msg(sorket+"只有管理员才能获取用户列表");
         return result;
     }
 
@@ -57,13 +71,24 @@ public class UserController {
     }
 
     @RequestMapping("/loginSuccess")
-    public ResultUtil login(){
+    public ResultUtil login(@AuthenticationPrincipal UserDetails userDetails){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        ResultUtil<Object> resultUtil = new ResultUtil<>();
+        resultUtil.setSuccess(true);
+        resultUtil.setMsg("恭喜你,登录成功");
+        resultUtil.setData(authentication.getPrincipal());
          logger.info("登录成功");
-        return ResultUtil.success("恭喜你,登录成功");
+        return resultUtil;
     }
 
     @RequestMapping("/logoutSuccess")
-    public ResultUtil logout(){
+    public ResultUtil logout(HttpServletRequest request, HttpServletResponse response){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!StringUtils.isEmpty(auth)){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+            // 清除当前用户权限缓存
+
+        }
         logger.info("退出成功");
         return ResultUtil.success("退出成功");
     }

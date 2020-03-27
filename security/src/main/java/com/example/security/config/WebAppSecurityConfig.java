@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,6 +21,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled =true)
 public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
     * 描述: 注入数据源
@@ -49,7 +51,7 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
 //                ;
 
         // 2、数据库登录
-        builder.userDetailsService(myUserDetailsService);
+        builder.userDetailsService(myUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
 
         // super.configure(builder);
     }
