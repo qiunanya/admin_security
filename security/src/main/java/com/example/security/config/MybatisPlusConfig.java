@@ -5,10 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
-/**
- * mybatis-plus配置
- */
+ /**
+   * <p>
+   * mybatis-plus配置
+   * </p>
+   *
+   * @author qiu
+   * @since 2020-03-90
+   */
 @Configuration
 public class MybatisPlusConfig {
 
