@@ -9,7 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
@@ -52,6 +55,7 @@ public class UserController {
     }
 
     @RequestMapping("/level2")
+    @PreAuthorize("hasAnyAuthority('ADMIN','BOSS')")
     public ResultUtil level2(){
         logger.info("内门弟子");
         return ResultUtil.success("恭喜你,你是‘内门弟子’可以访问level2");

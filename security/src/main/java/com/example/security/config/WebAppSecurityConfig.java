@@ -17,11 +17,15 @@ import javax.sql.DataSource;
  * @ClassName WebAppSecurityConfig
  * @Author QiuKing
  * @EnableWebSecurity 开启security环境注解
+ * @EnableGlobalMethodSecurity(prePostEnabled =true) 作用：是这些注解生效 @PreAuthorize("hasRole('ADMIN')")
+ *     @PostAuthorize()
+ *     @PreFilter()
+ *     @PostFilter()
  * @Date 2020/3/1916:15
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled =true)
+@EnableGlobalMethodSecurity(prePostEnabled =true,securedEnabled=true,jsr250Enabled=true)
 public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
     * 描述: 注入数据源
