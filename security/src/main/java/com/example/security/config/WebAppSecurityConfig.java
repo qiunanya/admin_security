@@ -102,6 +102,8 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .formLogin()
+                .loginPage("/user/unLogin")
+                .permitAll()
                 .loginProcessingUrl("/do/login")
                 .usernameParameter("loginName")
                 .passwordParameter("loginPassword")

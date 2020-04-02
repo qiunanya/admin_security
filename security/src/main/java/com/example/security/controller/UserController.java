@@ -35,8 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
-    @Value("${jwt.sorket}")
-    private String sorket= null;
+    @Value("${jwt.secret}")
+    private String secret= null;
     /**
     * 描述: <br>获得日志
     * @Author QiuKing
@@ -65,7 +65,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResultUtil list() {
         ResultUtil result = userService.getList();
-        result.setTest_msg(sorket+"只有管理员才能获取用户列表");
+        result.setTest_msg(secret+"只有管理员才能获取用户列表");
         return result;
     }
 
@@ -95,6 +95,12 @@ public class UserController {
         }
         logger.info("退出成功");
         return ResultUtil.success("退出成功");
+    }
+
+    @RequestMapping("/unLogin")
+    public ResultUtil unLogin(){
+        logger.info("未登录，请登录后在操作");
+        return ResultUtil.error("未登录，请登录后在操作");
     }
 
 }

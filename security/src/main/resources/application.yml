@@ -20,6 +20,6 @@ logging:
 jwt:
   tokenHeader: Authorization
   tokenPrefix: Bearer
-  secret: lanjwt
+  secret: NanYaQiu
   expiration: 3600
   rememberExpiration: 604800
