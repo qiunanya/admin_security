@@ -1,6 +1,8 @@
 package com.example.security.controller;
 
 
+import com.example.security.config.ExtendSecurityUser;
+import com.example.security.entitys.UserEntity;
 import com.example.security.service.IUserService;
 import com.example.security.utils.ResultUtil;
 import com.sun.deploy.net.HttpResponse;
@@ -17,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.util.StringUtils;
@@ -46,6 +49,7 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+    private Object principal;
 
 
     @RequestMapping("/level1")
@@ -77,12 +81,10 @@ public class UserController {
     @RequestMapping("/loginSuccess")
     public ResultUtil login(@AuthenticationPrincipal UserDetails userDetails){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        ResultUtil<Object> resultUtil = new ResultUtil<>();
-        resultUtil.setSuccess(true);
-        resultUtil.setMsg("恭喜你,登录成功");
-        resultUtil.setData(authentication.getPrincipal());
+        Object principal = authentication.getPrincipal();
+
          logger.info("登录成功");
-        return resultUtil;
+        return ResultUtil.loginSuccess(principal);
     }
 
     @RequestMapping("/logoutSuccess")

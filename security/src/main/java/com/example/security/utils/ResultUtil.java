@@ -40,6 +40,15 @@ public class ResultUtil<T> {
         return resultUtil;
     }
 
+    public static ResultUtil loginSuccess(Object data) {
+        ResultUtil resultUtil = new ResultUtil();
+        resultUtil.setCode(200);
+        resultUtil.setSuccess(true);
+        resultUtil.setData(data);
+        resultUtil.setMsg("登录成功");
+        return resultUtil;
+    }
+
     /**
      * 成功
      *

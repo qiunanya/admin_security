@@ -6,7 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-
+/**
+  * <p>
+  *  描述
+  * </p>
+  * @author NanYa
+  * @since 2020-04-03
+  */
 @Slf4j
 public class ResponseUtil {
 

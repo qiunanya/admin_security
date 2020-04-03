@@ -1,45 +1,103 @@
 package com.example.security.config;
 
+import com.example.security.entitys.Role;
 import com.example.security.entitys.UserEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
- /**
-   * <p>
-   *   考虑到user中只有账号和密码，为了获取到原始的UserEntity对象，专门创建这个类对
-   *   spring security 自带的User类进行扩展
-   *  扩展spring security的用户对象，返回用户完整信息
-   * </p>
-   *
-   * @author qiu
-   * @since 2020-03-87
-   */
-public class ExtendSecurityUser extends User {
-     /**
-      * 原始对象
-      * UserEntity originalUser ：传入原始的UserEntity对象
-      * List<GrantedAuthority> authorities ：创建角色、权限信息集合
-      */
-    private UserEntity originalUser;
-    public ExtendSecurityUser(UserEntity originalUser, List<GrantedAuthority> authorities){
-        /**
-         * 调用父类构造器
-         */
-        super(originalUser.getUserName(),originalUser.getUserPassword(),authorities);
-        /**
-         * 给本类的this.originalUser 赋值
-         */
-        this.originalUser = originalUser;
-     }
+/**
+ * <p>
+ *   考虑到user中只有账号和密码，为了获取到原始的UserEntity对象，专门创建这个类对
+ *   spring security 自带的User类进行扩展
+ *  扩展spring security的用户对象，返回用户完整信息
+ * </p>
+ *
+ * @author qiu
+ * @since 2020-03-87
+ */
+@Data
+@EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+public class ExtendSecurityUser extends UserEntity implements UserDetails {
 
-     /**
-      * 对外提供的获取原始UserEntity 对象 的get方法
-      * @return
-      */
-    public UserEntity getOriginalUser() {
-        return originalUser;
+    /**
+     * 是否记住密码
+     */
+    private Boolean remember;
+
+    private Collection<? extends GrantedAuthority> authorities;
+
+    private List<Role> roleList;
+
+    private String token;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
+    public ExtendSecurityUser(UserEntity user, Collection<? extends GrantedAuthority> authorities, List<Role> roles,String token){
+        this.authorities = authorities;
+        this.setUserName(user.getUserName());
+        this.setUserPhone(user.getUserPhone());
+        this.setUserCreateTime(user.getUserCreateTime());
+        this.setUserPassword(user.getUserPassword());
+        this.setUserStatus(user.getUserStatus());
+        this.setAuthorities(authorities);
+        this.setRoleList(roles);
+        this.setToken(token);
+    }
+
+    @Override
+    public String getPassword() {
+        return this.getUserPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getUserName();
+    }
+
+    /**
+     * 账户是否过期
+     * @return
+     */
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    /**
+     * 是否禁用
+     * @return
+     */
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    /**
+     * 密码是否过期
+     * @return
+     */
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    /**
+     * 是否启用
+     * @return
+     */
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

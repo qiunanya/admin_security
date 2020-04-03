@@ -6,10 +6,10 @@ import com.example.security.entitys.UserEntity;
 import com.example.security.service.IPermissionService;
 import com.example.security.service.IRoleService;
 import com.example.security.service.IUserService;
+import com.example.security.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,6 +34,9 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
     private IPermissionService iPermissionService;
     @Autowired
     private IRoleService iRoleService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -71,7 +74,9 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
             // 把admin对象和authorities 封装到 UserDetails中
 //            String password = user.getUserPassword();
 //    return new User(username,password,authorities);
-            ExtendSecurityUser admin = new ExtendSecurityUser(user, authorities);
+            String token = jwtTokenUtil.createToken(user);
+            ExtendSecurityUser admin = new ExtendSecurityUser(user, authorities,roleList,token);
+
 
             return admin;
         }

@@ -74,7 +74,7 @@ public class SecurityApplicationTests {
     @Test
     public void resoleToken(){
         // 生成后解析
-        String token = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwOTAyIiwic3ViIjoi6YKxIiwiaWF0IjoxNTg1ODEwOTkxLCJleHAiOjE1ODY0MTU3OTEsImFkbWluIjoicGVyc29uIn0.VyMsg_nZ63N7OISIPzMVX4xMMzZs3tu3CljvDKw_EUM";
+        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaXVueSIsImV4cCI6MTU4NTg5OTk1OCwiaWF0IjoxNTg1ODkyNzU4fQ.GYAZrOXrnX4kDllguftTeQ3UYdtMOo5u0I-M7xq3RSskxy25XjJS-ig0gAnorNSzztN42gn6x03uSK0x9LuilA";
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         System.out.println("解析token："+claims + "密钥："+secret);
 

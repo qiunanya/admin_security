@@ -3,13 +3,18 @@ package com.example.security.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -38,6 +43,7 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyUserDetailsServiceImpl myUserDetailsService;
 
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -55,7 +61,7 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
 //                ;
 
         // 2、数据库登录
-        builder.userDetailsService(myUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+        builder.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoderBean());
 
         // super.configure(builder);
     }
@@ -97,14 +103,17 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAuthority("内门弟子")
                 .and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
                 .anyRequest()
                 .authenticated()
-
                 .and()
+               // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                // 定制我们自己的 session 策略：调整为让 Spring Security 不创建和使用 session
                 .formLogin()
                 .loginPage("/user/unLogin")
                 .permitAll()
                 .loginProcessingUrl("/do/login")
+                .permitAll()
                 .usernameParameter("loginName")
                 .passwordParameter("loginPassword")
                 .defaultSuccessUrl("/user/loginSuccess")
@@ -118,7 +127,14 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .accessDeniedPage("/error/no/auth")
                 ;
-
+          // security.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
        //super.configure(security);
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoderBean() {
+        return new BCryptPasswordEncoder();
+    }
+
+
 }
