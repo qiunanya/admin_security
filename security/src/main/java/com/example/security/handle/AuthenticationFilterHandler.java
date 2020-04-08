@@ -77,6 +77,7 @@ public class AuthenticationFilterHandler extends BasicAuthenticationFilter {
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }catch (Exception e){
+             logger.info("认证异常");
              e.getStackTrace();
         }
         chain.doFilter(request,response);
@@ -105,18 +106,20 @@ public class AuthenticationFilterHandler extends BasicAuthenticationFilter {
             ResponseUtil.out(response,ResponseUtil.resultMap(false,401,"token 已经失效，请重新登录"));
             return null;
         }catch (Exception e){
-            logger.error("token已失效");
+            logger.error("权限不足 ：getAuthentication");
             redisCacheProject.deleteObject(username);
             ResponseUtil.out(response, ResponseUtil.resultMap(false, 500, "解析token错误"));
             return null;
         }
 
-        if (StringUtils.isEmpty(username)) {
+        if (!StringUtils.isEmpty(username)) {
             // 踩坑提醒 此处password不能为null
             User principal = new User(username, "", authorities);
             return new UsernamePasswordAuthenticationToken(principal, null, authorities);
+        }else {
+            return null;
         }
-        return null;
+
 
 
     }

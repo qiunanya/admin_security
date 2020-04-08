@@ -29,6 +29,7 @@ public class AccessDeniedImplHandler implements AccessDeniedHandler {
            ResponseUtil.out(response, ResponseUtil.resultMap(false, 403, StaticConstant.NO_ATTHORIZED));
        }else{
            // mredirectStrategy.sendRedirect(request, response, "/video/common/access/403");
+           ResponseUtil.out(response, ResponseUtil.resultMap(false, 403, StaticConstant.NO_ATTHORIZED));
        }
     }
 

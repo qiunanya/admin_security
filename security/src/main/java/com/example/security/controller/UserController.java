@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 
 /**
 * 描述: 用户接口
@@ -60,16 +62,19 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('role:list')")
+    @PreAuthorize("hasAuthority('BOSS')")
     public ResultUtil list() {
         ResultUtil result = userService.getList();
-        result.setTest_msg(secret+"只有管理员才能获取用户列表");
+        result.setTest_msg(secret+"只有管理员才能获取用户列表role:list");
         return result;
     }
 
     @GetMapping("/test")
     public ResultUtil test(){
-        stringRedisTemplate.opsForValue().append("qiu","hello world");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        logger.info("用户有的权限："+authorities);
+       // stringRedisTemplate.opsForValue().append("qiu","hello world");
         return  ResultUtil.success("不需要登录也能访问我");
     }
 

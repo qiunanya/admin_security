@@ -7,7 +7,7 @@ package com.example.security.utils;
  */
 public class StaticConstant {
 
-    public final static Integer ZERO=0;
+    public final static Integer ZERO = 0;
 
     public final static String LOGIN_FAIL = "登录失败";
 

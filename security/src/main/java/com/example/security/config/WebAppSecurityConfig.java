@@ -134,6 +134,8 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
+                .csrf().disable()
+                .cors().disable()
 
                 .formLogin()
                 .loginPage("/user/unLogin")
@@ -150,15 +152,14 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .csrf()
-                .disable()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedImplHandler)
+
+                .and()
                 .logout()
                 .logoutUrl("/do/logout")
                 .logoutSuccessHandler(logoutSuccessHandler)
                 //.logoutSuccessUrl("/user/logoutSuccess").permitAll()
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler(accessDeniedImplHandler)
                 .and()
                 //添加token验证过滤器 除已配置的其它请求都需经过此过滤器
                 .addFilter(new AuthenticationFilterHandler(authenticationManager(),tokenProperties, redisCacheProject, securityUtil));

@@ -15,7 +15,7 @@ mybatis-plus:
 
 logging:
   level:
-    com.example.mapper: debug
+    com.example.security.mapper: debug
 
 jwt:
   tokenHeader: Authorization
