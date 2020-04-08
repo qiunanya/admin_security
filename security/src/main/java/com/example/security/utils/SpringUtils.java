@@ -5,12 +5,14 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
-
 /**
- * @author: Lan
- * @date: 2019/4/8 17:57
- * @description:拦截器依赖注入bean
- */
+  * <p>
+  *  拦截器依赖注入bean
+  * </p>
+  *
+  * @author qiu
+  * @since 2020-04-97
+  */
 @Slf4j
 @Component
 public class SpringUtils implements ApplicationContextAware {

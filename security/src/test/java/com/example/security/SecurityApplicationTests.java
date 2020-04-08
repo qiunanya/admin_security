@@ -2,6 +2,7 @@ package com.example.security;
 
 import com.example.security.entitys.Permission;
 import com.example.security.entitys.Role;
+import com.example.security.entitys.UserEntity;
 import com.example.security.service.IPermissionService;
 import com.example.security.service.IRoleService;
 import io.jsonwebtoken.Claims;
@@ -13,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,6 +25,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SecurityApplicationTests {
+
     @Value("${jwt.secret}")
     private String secret= null;
 
@@ -30,6 +34,37 @@ public class SecurityApplicationTests {
 
     @Autowired
     private IRoleService iRoleService;
+
+    // 操作字符串
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+    // 操作字对象
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Autowired
+    RedisTemplate<Object, UserEntity> userEntityRedisTemplate;
+
+    @Test
+    public void redisTest(){
+        UserEntity entity = new UserEntity();
+        entity.setUserId("123");
+        entity.setUserName("邱南亚");
+        entity.setUserCreateTime("2020-3-24");
+        userEntityRedisTemplate.opsForValue().set("qiuny",entity);
+    }
+
+    @Test
+    public void getValueTest(){
+        String qiu = stringRedisTemplate.opsForValue().get("qiu");
+        System.out.printf("获取值成功：qiu= "+qiu);
+    }
+
+    @Test
+    public void deleteValueTest(){
+        Boolean qiu = stringRedisTemplate.delete("msg");
+        System.out.printf("删除成功：qiu= "+qiu);
+    }
 
     @Test
     public void contextLoads() {
@@ -74,7 +109,7 @@ public class SecurityApplicationTests {
     @Test
     public void resoleToken(){
         // 生成后解析
-        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJxaXVueSIsImV4cCI6MTU4NTg5OTk1OCwiaWF0IjoxNTg1ODkyNzU4fQ.GYAZrOXrnX4kDllguftTeQ3UYdtMOo5u0I-M7xq3RSskxy25XjJS-ig0gAnorNSzztN42gn6x03uSK0x9LuilA";
+        String token = "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJmMjQ1NzAxOGRmMGI0MDJkOTY4NGVlZjYyZDM1NTc2ZiIsInN1YiI6InFpdW55IiwiaWF0IjoxNTg2MDA4Njg0LCJleHAiOjE1ODYyMjQ2ODR9.zAVV-SyXT2uuxGEDqR3KSIDhqmwra3yjcm7ewfU71hFh1_6-kxaN9hggmMDysavstyJxRBs9S8MXJimIn87yrw";
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         System.out.println("解析token："+claims + "密钥："+secret);
 

@@ -8,7 +8,6 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class ExtendSecurityUser extends UserEntity implements UserDetails {
+public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
 
     /**
      * 是否记住密码
@@ -43,7 +42,7 @@ public class ExtendSecurityUser extends UserEntity implements UserDetails {
         return authorities;
     }
 
-    public ExtendSecurityUser(UserEntity user, Collection<? extends GrantedAuthority> authorities, List<Role> roles,String token){
+    public SecurityUserDetailsImpl(UserEntity user, Collection<? extends GrantedAuthority> authorities, List<Role> roles, String token){
         this.authorities = authorities;
         this.setUserName(user.getUserName());
         this.setUserPhone(user.getUserPhone());

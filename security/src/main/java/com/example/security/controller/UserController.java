@@ -1,30 +1,21 @@
 package com.example.security.controller;
 
 
-import com.example.security.config.ExtendSecurityUser;
-import com.example.security.entitys.UserEntity;
 import com.example.security.service.IUserService;
 import com.example.security.utils.ResultUtil;
-import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpRequest;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import sun.plugin.liveconnect.SecurityContextHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,6 +42,9 @@ public class UserController {
     private IUserService userService;
     private Object principal;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
 
     @RequestMapping("/level1")
     public ResultUtil level1(){
@@ -66,7 +60,7 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('role:list')")
     public ResultUtil list() {
         ResultUtil result = userService.getList();
         result.setTest_msg(secret+"只有管理员才能获取用户列表");
@@ -75,6 +69,7 @@ public class UserController {
 
     @GetMapping("/test")
     public ResultUtil test(){
+        stringRedisTemplate.opsForValue().append("qiu","hello world");
         return  ResultUtil.success("不需要登录也能访问我");
     }
 

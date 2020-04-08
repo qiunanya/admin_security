@@ -1,5 +1,9 @@
 package com.example.security.config;
 
+import com.example.security.framework.RedisCacheProject;
+import com.example.security.framework.SecurityUtils;
+import com.example.security.framework.TokenProperties;
+import com.example.security.handle.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -41,7 +44,31 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
     @Autowired
+    private AuthenticationSuccessHandler successHandler;
+
+    @Autowired
+    private AuthenticationFailHandler failHandler;
+
+    @Autowired
+    private LogoutSuccessHandlerImpl logoutSuccessHandler;
+
+    @Autowired
+    private AuthenticationEntryPointImpl unAuthentication;
+
+    @Autowired
+    private AccessDeniedImplHandler accessDeniedImplHandler;
+
+   @Autowired
     private MyUserDetailsServiceImpl myUserDetailsService;
+
+    @Autowired
+    private TokenProperties tokenProperties;
+
+    @Autowired
+    private RedisCacheProject redisCacheProject;
+
+    @Autowired
+    private SecurityUtils securityUtil;
 
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -107,28 +134,36 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-               // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                // 定制我们自己的 session 策略：调整为让 Spring Security 不创建和使用 session
+
                 .formLogin()
                 .loginPage("/user/unLogin")
                 .permitAll()
                 .loginProcessingUrl("/do/login")
                 .permitAll()
+                .successHandler(successHandler)
+                .failureHandler(failHandler)
                 .usernameParameter("loginName")
                 .passwordParameter("loginPassword")
-                .defaultSuccessUrl("/user/loginSuccess")
+                //.defaultSuccessUrl("/user/loginSuccess")
+                .and()
+                .exceptionHandling().authenticationEntryPoint(unAuthentication)
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf()
                 .disable()
                 .logout()
                 .logoutUrl("/do/logout")
-                .logoutSuccessUrl("/user/logoutSuccess").permitAll()
+                .logoutSuccessHandler(logoutSuccessHandler)
+                //.logoutSuccessUrl("/user/logoutSuccess").permitAll()
                 .and()
                 .exceptionHandling()
-                .accessDeniedPage("/error/no/auth")
-                ;
-          // security.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-       //super.configure(security);
+                .accessDeniedHandler(accessDeniedImplHandler)
+                .and()
+                //添加token验证过滤器 除已配置的其它请求都需经过此过滤器
+                .addFilter(new AuthenticationFilterHandler(authenticationManager(),tokenProperties, redisCacheProject, securityUtil));
+
+                //super.configure(security);
     }
 
     @Bean

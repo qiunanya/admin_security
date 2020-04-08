@@ -1,11 +1,9 @@
 package com.example.security.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.security.entitys.Role;
 import com.example.security.mapper.RoleMapper;
 import com.example.security.service.IRoleService;
-import com.example.security.utils.Contant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

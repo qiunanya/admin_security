@@ -1,7 +1,14 @@
 package com.example.security.enums;
 
 import lombok.Getter;
-
+/**
+  * <p>
+  *  枚举类
+  * </p>
+  *
+  * @author qiu
+  * @since 2020-04-95
+  */
 @Getter
 public enum ResultEnum {
     ACCESS_NOT(501, "权限不足"),

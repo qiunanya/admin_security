@@ -15,4 +15,5 @@ public interface IUserService extends IService<UserEntity> {
     ResultUtil getList();
 
     UserEntity findUserByName(String username);
+
 }

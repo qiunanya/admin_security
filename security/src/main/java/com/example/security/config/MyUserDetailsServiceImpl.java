@@ -75,7 +75,7 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
 //            String password = user.getUserPassword();
 //    return new User(username,password,authorities);
             String token = jwtTokenUtil.createToken(user);
-            ExtendSecurityUser admin = new ExtendSecurityUser(user, authorities,roleList,token);
+            SecurityUserDetailsImpl admin = new SecurityUserDetailsImpl(user, authorities,roleList,token);
 
 
             return admin;

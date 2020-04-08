@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.security.entitys.UserEntity;
 import com.example.security.mapper.UserMapper;
 import com.example.security.service.IUserService;
-import com.example.security.utils.Contant;
+import com.example.security.utils.StaticConstant;
 import com.example.security.utils.ResultUtil;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,UserEntity> implemen
     @Override
     public ResultUtil getList() {
         QueryWrapper<UserEntity> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_status",Contant.ZERO);
+        wrapper.eq("user_status", StaticConstant.ZERO);
         try {
             List<UserEntity> list = this.list(wrapper);
            return ResultUtil.success(list);
@@ -35,7 +35,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,UserEntity> implemen
     public UserEntity findUserByName(String username) {
         QueryWrapper<UserEntity> wrapper = new QueryWrapper<>();
         wrapper.eq("user_name",username)
-                .eq("user_status",Contant.ZERO);
+                .eq("user_status", StaticConstant.ZERO);
         UserEntity one = this.getOne(wrapper);
         return one;
     }

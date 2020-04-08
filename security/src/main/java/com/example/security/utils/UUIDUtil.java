@@ -16,7 +16,7 @@ public class UUIDUtil {
      */
     public static String createId() {
         String string = UUID.randomUUID().toString().replace("-", "");
-        return string;
+        return string.substring(0,10);
     }
 
 }
