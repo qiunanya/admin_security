@@ -120,7 +120,8 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
         * @Date 2020/3/19 17:11
         */
 
-        security
+        security.csrf().disable()
+                .cors().disable()
                 .authorizeRequests()
                 .antMatchers("/user/test")
                 .permitAll()
@@ -133,10 +134,8 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
                 .anyRequest()
                 .authenticated()
-                .and()
-                .csrf().disable()
-                .cors().disable()
 
+                .and()
                 .formLogin()
                 .loginPage("/user/unLogin")
                 .permitAll()

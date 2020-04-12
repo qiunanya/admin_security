@@ -97,7 +97,7 @@ public class AuthenticationFilterHandler extends BasicAuthenticationFilter {
                     .getBody();
             username = claims.getSubject();
 
-            // 为做缓存权限，直接读取数据
+            // 未做缓存权限，直接读取数据
             authorities = securityUtils.getCurrUserPerms(username);
 
         }catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e ){

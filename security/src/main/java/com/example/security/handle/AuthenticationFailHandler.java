@@ -1,10 +1,11 @@
 package com.example.security.handle;
 
-import com.example.security.utils.StaticConstant;
 import com.example.security.utils.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +33,18 @@ public class AuthenticationFailHandler extends SimpleUrlAuthenticationFailureHan
         // super.onAuthenticationFailure(request, response, exception);
 
         logger.info("登录失败：AuthenticationFailHandler"+exception);
-
-        ResponseUtil.out(response,ResponseUtil.resultMap(false,201, StaticConstant.LOGIN_FAIL));
-
+        if (exception instanceof UsernameNotFoundException || exception instanceof BadCredentialsException){
+            ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"账号或密码错误"));
+        }else if (exception instanceof LockedException){
+            ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"账号已锁定"));
+        }else if (exception instanceof DisabledException){
+            ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"账号已被禁用，请联系管理员"));
+        }else if (exception instanceof AccountExpiredException){
+            ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"账号已过期"));
+        }else if (exception instanceof CredentialsExpiredException){
+            ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"账号密码已过期"));
+        }else {
+            ResponseUtil.out(response,ResponseUtil.resultMap(false,500, "登录失败，其他内部错误"));
+        }
     }
 }

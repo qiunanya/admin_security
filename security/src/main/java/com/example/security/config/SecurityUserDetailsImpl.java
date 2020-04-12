@@ -2,6 +2,7 @@ package com.example.security.config;
 
 import com.example.security.entitys.Role;
 import com.example.security.entitys.UserEntity;
+import com.example.security.utils.StaticConstant;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -37,6 +38,8 @@ public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
 
     private String token;
 
+    private UserEntity user;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -52,6 +55,7 @@ public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
         this.setAuthorities(authorities);
         this.setRoleList(roles);
         this.setToken(token);
+        this.user = user;
     }
 
     @Override
@@ -65,21 +69,21 @@ public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
     }
 
     /**
-     * 账户是否过期
+     * 账户是否过期 0正常 -1删除
      * @return
      */
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return StaticConstant.ZERO.equals(user.getUserStatus());
     }
 
     /**
-     * 是否禁用
+     * 是否锁定 0正常 -1删除
      * @return
      */
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return StaticConstant.USER_ACCOUNT_NORMAL.equals(user.getLockStatus());
     }
 
     /**
@@ -92,11 +96,11 @@ public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
     }
 
     /**
-     * 是否启用
+     * 是否启用 0启用 -1禁用
      * @return
      */
     @Override
     public boolean isEnabled() {
-        return true;
+        return StaticConstant.USER_FORBIDDEN_ACCOUNT.equals(user.getForbiddenStatus());
     }
 }

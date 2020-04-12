@@ -26,10 +26,10 @@ public class AccessDeniedImplHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
 
        if (isAjaxRequest(request)){
-           ResponseUtil.out(response, ResponseUtil.resultMap(false, 403, StaticConstant.NO_ATTHORIZED));
+           ResponseUtil.out(response, ResponseUtil.resultMap(false, 403, StaticConstant.NO_AUTHORIZED));
        }else{
            // mredirectStrategy.sendRedirect(request, response, "/video/common/access/403");
-           ResponseUtil.out(response, ResponseUtil.resultMap(false, 403, StaticConstant.NO_ATTHORIZED));
+           ResponseUtil.out(response, ResponseUtil.resultMap(false, 403, StaticConstant.NO_AUTHORIZED));
        }
     }
 

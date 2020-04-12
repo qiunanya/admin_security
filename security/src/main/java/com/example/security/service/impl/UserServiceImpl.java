@@ -34,9 +34,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,UserEntity> implemen
     @Override
     public UserEntity findUserByName(String username) {
         QueryWrapper<UserEntity> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_name",username)
-                .eq("user_status", StaticConstant.ZERO);
-        UserEntity one = this.getOne(wrapper);
-        return one;
+        wrapper.lambda().eq(UserEntity::getUserName,username)
+                .eq(UserEntity::getUserStatus, StaticConstant.ZERO);
+        UserEntity user = this.getOne(wrapper);
+        return user;
     }
 }

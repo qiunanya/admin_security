@@ -64,8 +64,19 @@ public class SecurityUtils {
         }else {
             return authorities;
         }
+    }
 
-
+    /**
+     * 获取当前用户详细信息
+     */
+    public static UserDetails getUserDetails(){
+        UserDetails userDetails;
+        try {
+            userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        }catch (Exception e){
+            throw new RuntimeException("登录状态过期");
+        }
+        return userDetails;
     }
 
 }
