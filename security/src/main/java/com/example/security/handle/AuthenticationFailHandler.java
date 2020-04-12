@@ -33,7 +33,9 @@ public class AuthenticationFailHandler extends SimpleUrlAuthenticationFailureHan
         // super.onAuthenticationFailure(request, response, exception);
 
         logger.info("登录失败：AuthenticationFailHandler"+exception);
-        if (exception instanceof UsernameNotFoundException || exception instanceof BadCredentialsException){
+        if (exception instanceof UsernameNotFoundException ){
+            ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"用户不存在"));
+        }else if (exception instanceof BadCredentialsException){
             ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"账号或密码错误"));
         }else if (exception instanceof LockedException){
             ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"账号已锁定"));
