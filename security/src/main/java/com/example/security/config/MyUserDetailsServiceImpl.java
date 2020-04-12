@@ -7,7 +7,6 @@ import com.example.security.service.IPermissionService;
 import com.example.security.service.IRoleService;
 import com.example.security.service.IUserService;
 import com.example.security.utils.JwtTokenUtil;
-import com.example.security.utils.StaticConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +47,7 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
         if (StringUtils.isEmpty(user)){
             logger.debug("用户不存在");
             throw new UsernameNotFoundException("用户不存在");
-        }else if(!user.getLockStatus().equals(StaticConstant.ZERO)){
-            logger.info("用户账号已被锁定");
-            throw new UsernameNotFoundException("用户账号已被锁定");
-        }else if (!user.getUserStatus().equals(StaticConstant.ZERO)){
-            logger.debug("用户账号已被删除");
-            throw new UsernameNotFoundException("用户账号已被删除");
-        }else {
+        } else {
             return createLoginUser(user);
         }
     }
