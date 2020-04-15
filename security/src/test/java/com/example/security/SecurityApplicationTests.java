@@ -1,10 +1,13 @@
 package com.example.security;
 
+import com.example.security.entitys.AuthorityEntity;
 import com.example.security.entitys.Permission;
 import com.example.security.entitys.Role;
 import com.example.security.entitys.UserEntity;
+import com.example.security.framework.RedisCacheProject;
 import com.example.security.service.IPermissionService;
 import com.example.security.service.IRoleService;
+import com.example.security.utils.StaticConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -38,12 +41,16 @@ public class SecurityApplicationTests {
     // 操作字符串
     @Autowired
     StringRedisTemplate stringRedisTemplate;
-    // 操作字对象
+    // 操作对象
     @Autowired
     RedisTemplate redisTemplate;
 
     @Autowired
+    RedisCacheProject redisCacheProject;
+
+    @Autowired
     RedisTemplate<Object, UserEntity> userEntityRedisTemplate;
+
 
     @Test
     public void redisTest(){
@@ -51,18 +58,30 @@ public class SecurityApplicationTests {
         entity.setUserId("123");
         entity.setUserName("邱南亚");
         entity.setUserCreateTime("2020-3-24");
-        userEntityRedisTemplate.opsForValue().set("qiuny",entity);
+        // redisCacheProject.setCacheObject(StaticConstant.LOGIN_MARK,entity);
+       // userEntityRedisTemplate.opsForValue().set("qiuny",entity);
+    }
+
+    @Test
+    public void getObject(){
+        Object qiuny = userEntityRedisTemplate.opsForValue().get("qiuny");
+
+        System.out.println("获取对象为："+ ((UserEntity) qiuny).getUserName());
     }
 
     @Test
     public void getValueTest(){
-        String qiu = stringRedisTemplate.opsForValue().get("qiu");
-        System.out.printf("获取值成功：qiu= "+qiu);
+       // stringRedisTemplate.opsForValue().set("ccddd","dshdfohsohdf555");
+        //String qiu = stringRedisTemplate.opsForValue().get("qiu");
+        AuthorityEntity authority = redisCacheProject.getCacheAuthority(StaticConstant.AUTHORITIES+"qiuny");
+        List<String> list = authority.getList();
+        list.forEach(e->System.out.printf("获取值成功：" + e));
+
     }
 
     @Test
     public void deleteValueTest(){
-        Boolean qiu = stringRedisTemplate.delete("msg");
+        Boolean qiu = userEntityRedisTemplate.delete("qiuny");
         System.out.printf("删除成功：qiu= "+qiu);
     }
 

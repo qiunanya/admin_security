@@ -31,8 +31,9 @@ public class AuthenticationFailHandler extends SimpleUrlAuthenticationFailureHan
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
         // super.onAuthenticationFailure(request, response, exception);
+        //request.getParameter()
 
-        logger.info("登录失败：AuthenticationFailHandler"+exception);
+        logger.info("登录失败：AuthenticationFailHandler"+exception.getMessage());
         if (exception instanceof UsernameNotFoundException ){
             ResponseUtil.out(response,ResponseUtil.resultMap(false,500,"用户不存在"));
         }else if (exception instanceof BadCredentialsException){

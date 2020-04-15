@@ -27,4 +27,8 @@ public class StaticConstant {
      */
     public final static Integer USER_FORBIDDEN_ACCOUNT= 0;
 
+    public final static String AUTHORITIES = "authorities";
+
+    public final static String LOGIN_MARK = "new_app";
+
 }

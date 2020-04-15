@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ import java.util.Map;
   * @since 2020-04-03
   */
 @Slf4j
-public class ResponseUtil {
+public class ResponseUtil implements Serializable {
 
     public static void write(HttpServletResponse response, Object o) {
         try {
@@ -49,7 +50,7 @@ public class ResponseUtil {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
             out = response.getWriter();
-            out.println(getJson(resultMap));
+            out.println(toJson(resultMap));
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -89,7 +90,7 @@ public class ResponseUtil {
         return resultMap;
     }
 
-    public static String getJson(Object object){
+    public static String toJson(Object object){
         GsonBuilder builder = new GsonBuilder();
         builder.setPrettyPrinting();
         Gson gson = builder.create();

@@ -1,16 +1,19 @@
 package com.example.security.handle;
 
+import com.example.security.entitys.AuthorityEntity;
 import com.example.security.framework.RedisCacheProject;
 import com.example.security.framework.SecurityUtils;
 import com.example.security.framework.TokenProperties;
 import com.example.security.utils.ResponseUtil;
 import com.example.security.utils.SecurityConstant;
+import com.example.security.utils.StaticConstant;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -97,17 +100,26 @@ public class AuthenticationFilterHandler extends BasicAuthenticationFilter {
                     .getBody();
             username = claims.getSubject();
 
-            // 未做缓存权限，直接读取数据
-            authorities = securityUtils.getCurrUserPerms(username);
-
+            // 读取缓存权限，直接读取数据
+            AuthorityEntity authority = redisCacheProject.getCacheAuthority(StaticConstant.AUTHORITIES+username);
+            if (!StringUtils.isEmpty(authority.getList())){
+                List<String> list = authority.getList();
+                for (String auth : list){
+                    SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(auth);
+                    authorities.add(simpleGrantedAuthority);
+                }
+            }else {
+                // 否则从数据库读取权限
+                authorities = securityUtils.getCurrUserPerms(username);
+            }
         }catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e ){
-            logger.info("token 已经失效，请重新登录");
-            redisCacheProject.deleteObject(username);
+            logger.info("token 已经失效，请重新登录:");
+            redisCacheProject.clearCacheAuthority(StaticConstant.AUTHORITIES + username);
             ResponseUtil.out(response,ResponseUtil.resultMap(false,401,"token 已经失效，请重新登录"));
             return null;
         }catch (Exception e){
             logger.error("权限不足 ：getAuthentication");
-            redisCacheProject.deleteObject(username);
+            redisCacheProject.clearCacheAuthority(StaticConstant.AUTHORITIES + username);
             ResponseUtil.out(response, ResponseUtil.resultMap(false, 500, "解析token错误"));
             return null;
         }

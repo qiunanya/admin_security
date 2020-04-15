@@ -3,6 +3,8 @@ package com.example.security.handle;
 import com.example.security.utils.StaticConstant;
 import com.example.security.utils.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -22,8 +24,14 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
+
+    private final static Logger logger = LoggerFactory.getLogger(AuthenticationEntryPointImpl.class);
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+
+        logger.error(e.getMessage());
+
         String msg = StaticConstant.UNAUTHORIZED+":"+request.getRequestURI();
         ResponseUtil.out(response,ResponseUtil.resultMap(false,201,msg));
 

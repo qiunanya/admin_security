@@ -1,8 +1,10 @@
 package com.example.security.handle;
 
-import com.example.security.utils.StaticConstant;
 import com.example.security.utils.ResponseUtil;
+import com.example.security.utils.StaticConstant;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -22,9 +24,12 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class AccessDeniedImplHandler implements AccessDeniedHandler {
+
+    private final static Logger logger = LoggerFactory.getLogger(AccessDeniedImplHandler.class);
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
-
+        logger.error("权限不足："+e.getMessage());
        if (isAjaxRequest(request)){
            ResponseUtil.out(response, ResponseUtil.resultMap(false, 403, StaticConstant.NO_AUTHORIZED));
        }else{

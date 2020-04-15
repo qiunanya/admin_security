@@ -1,10 +1,12 @@
 package com.example.security.config;
 
+import com.example.security.entitys.AuthorityEntity;
 import com.example.security.entitys.UserEntity;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -27,6 +29,7 @@ import java.net.UnknownHostException;
   * @since 2020-04-96
   */
 @Configuration
+@EnableCaching
 public class MyRedisConfig {
     /**
      * 全局使用方法
@@ -68,7 +71,16 @@ public class MyRedisConfig {
         redisTemplate.setConnectionFactory(factory);
         Jackson2JsonRedisSerializer<UserEntity> jsonRedisSerializer = new Jackson2JsonRedisSerializer<>(UserEntity.class);
         redisTemplate.setDefaultSerializer(jsonRedisSerializer);
+        return redisTemplate;
+    }
 
+
+    @Bean
+    public RedisTemplate<Object, AuthorityEntity> SecurityUserDetailsImplTemplate(RedisConnectionFactory factory) throws UnknownHostException{
+        RedisTemplate<Object, AuthorityEntity> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(factory);
+        Jackson2JsonRedisSerializer<AuthorityEntity> redisSerializer = new Jackson2JsonRedisSerializer<>(AuthorityEntity.class);
+        redisTemplate.setDefaultSerializer(redisSerializer);
         return redisTemplate;
     }
 

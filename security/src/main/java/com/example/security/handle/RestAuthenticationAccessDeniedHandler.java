@@ -19,6 +19,7 @@ import java.io.IOException;
   * @since 2020-04-03
   */
 public class RestAuthenticationAccessDeniedHandler implements AccessDeniedHandler {
+
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
         ResponseUtil.write(response, ResultUtil.error(ResultEnum.ACCESS_NOT));

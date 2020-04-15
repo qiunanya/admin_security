@@ -68,7 +68,7 @@ public class UserEntity implements Serializable {
     private Integer forbiddenStatus;
 
 //    @TableField(exist = false)
-//    private Collection<? extends GrantedAuthority> authorities;
+//    private List<GrantedAuthority> authorities;
 
 
 }

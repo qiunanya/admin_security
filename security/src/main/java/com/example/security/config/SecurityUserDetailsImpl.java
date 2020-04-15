@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,7 +26,9 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
+public class SecurityUserDetailsImpl implements UserDetails, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 是否记住密码
@@ -40,6 +43,27 @@ public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
 
     private UserEntity user;
 
+    /**
+     * 用户名
+     */
+    private String userName;
+
+    /**
+     * 用户手机号码
+     */
+    private String userPhone;
+
+    /**
+     * 用户注册时间
+     */
+    private String userCreateTime;
+
+    /**
+     * 用户状态，0正常，-1删除
+     */
+    private Integer userStatus;
+    private String userPassword;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -48,9 +72,9 @@ public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
     public SecurityUserDetailsImpl(UserEntity user, Collection<? extends GrantedAuthority> authorities, List<Role> roles, String token){
         this.authorities = authorities;
         this.setUserName(user.getUserName());
+        this.setUserPassword(user.getUserPassword());
         this.setUserPhone(user.getUserPhone());
         this.setUserCreateTime(user.getUserCreateTime());
-        this.setUserPassword(user.getUserPassword());
         this.setUserStatus(user.getUserStatus());
         this.setAuthorities(authorities);
         this.setRoleList(roles);
@@ -65,7 +89,7 @@ public class SecurityUserDetailsImpl extends UserEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.getUserName();
+        return this.userName;
     }
 
     /**

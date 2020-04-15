@@ -1,8 +1,10 @@
 package com.example.security.framework;
 
 import com.example.security.entitys.Permission;
+import com.example.security.entitys.Role;
 import com.example.security.entitys.UserEntity;
 import com.example.security.service.IPermissionService;
+import com.example.security.service.IRoleService;
 import com.example.security.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -32,6 +34,9 @@ public class SecurityUtils {
     @Autowired
     private IPermissionService iPermissionService;
 
+    @Autowired
+    private IRoleService iRoleService;
+
     /**
      * 获取当前用户信息
      */
@@ -56,14 +61,21 @@ public class SecurityUtils {
     public List<GrantedAuthority> getCurrUserPerms(String username) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         List<Permission> permissions = iPermissionService.permissionListByUserId(iUserService.findUserByName(username).getUserId());
+        List<Role> roleList = iRoleService.getRoleListByUserId(iUserService.findUserByName(username).getUserId());
         if (!StringUtils.isEmpty(permissions)){
             for (Permission p : permissions) {
                 authorities.add(new SimpleGrantedAuthority(p.getPermissionName()));
             }
-            return authorities;
-        }else {
-            return authorities;
         }
+
+        if (!StringUtils.isEmpty(roleList)&&roleList.size()>0){
+            roleList.forEach(e->{
+                SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(e.getRoleName());
+                authorities.add(simpleGrantedAuthority);
+            });
+        }
+
+        return authorities;
     }
 
     /**
