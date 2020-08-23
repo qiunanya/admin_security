@@ -5,7 +5,7 @@ import com.example.security.entitys.UserEntity;
 import com.example.security.utils.ResultUtil;
 
 /**
-* 描述: <br>
+* 描述:
 * @Author QiuKing
 * @Date 2020/3/19 10:15
 */

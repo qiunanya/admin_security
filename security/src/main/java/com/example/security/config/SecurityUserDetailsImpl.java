@@ -34,62 +34,29 @@ public class SecurityUserDetailsImpl implements UserDetails, Serializable {
      * 是否记住密码
      */
     private Boolean remember;
-
-    private Collection<? extends GrantedAuthority> authorities;
-
-    private List<Role> roleList;
-
-    private String token;
-
+    /**
+     *  用户实体类
+     */
     private UserEntity user;
-
-    /**
-     * 用户名
-     */
-    private String userName;
-
-    /**
-     * 用户手机号码
-     */
-    private String userPhone;
-
-    /**
-     * 用户注册时间
-     */
-    private String userCreateTime;
-
-    /**
-     * 用户状态，0正常，-1删除
-     */
-    private Integer userStatus;
-    private String userPassword;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return user.getAuthorities();
     }
 
     public SecurityUserDetailsImpl(UserEntity user, Collection<? extends GrantedAuthority> authorities, List<Role> roles, String token){
-        this.authorities = authorities;
-        this.setUserName(user.getUserName());
-        this.setUserPassword(user.getUserPassword());
-        this.setUserPhone(user.getUserPhone());
-        this.setUserCreateTime(user.getUserCreateTime());
-        this.setUserStatus(user.getUserStatus());
-        this.setAuthorities(authorities);
-        this.setRoleList(roles);
-        this.setToken(token);
+        // 引入用户实体类并赋值
         this.user = user;
     }
 
     @Override
     public String getPassword() {
-        return this.getUserPassword();
+        return this.user.getUserPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.user.getUserName();
     }
 
     /**

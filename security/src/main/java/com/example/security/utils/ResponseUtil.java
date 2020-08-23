@@ -76,7 +76,14 @@ public class ResponseUtil implements Serializable {
         }
         return resultMap;
     }
-
+    /**
+      * <p>
+      *  普通接口返回类型
+      * </p>
+      *
+      * @author qiu
+      * @since 2020-08-23
+      */
     public static Map<String, Object> resultMap(boolean flag, Integer code, String msg, Object token, List<GrantedAuthority> authorities) {
         Map<String, Object> resultMap = new HashMap<>(16);
         resultMap.put("success", flag);
@@ -86,6 +93,26 @@ public class ResponseUtil implements Serializable {
         resultMap.put("timestamp", System.currentTimeMillis());
         if (token != null) {
             resultMap.put("Token", token);
+        }
+        return resultMap;
+    }
+    /**
+      * <p>
+      *  登录返回类型
+      * </p>
+      *
+      * @author qiu
+      * @since 2020-08-23
+      */
+    public static Map<String, Object> resultMap(boolean flag, Integer code, String msg, Object token, Object obj) {
+        Map<String, Object> resultMap = new HashMap<>(16);
+        resultMap.put("success", flag);
+        resultMap.put("msg", msg);
+        resultMap.put("code", code);
+        resultMap.put("userInfo",obj);
+        resultMap.put("timestamp", System.currentTimeMillis());
+        if (token != null) {
+            resultMap.put("token", token);
         }
         return resultMap;
     }

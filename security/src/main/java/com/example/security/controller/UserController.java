@@ -65,7 +65,6 @@ public class UserController {
     @PreAuthorize("hasAuthority('ROLE_BOSS')")
     public ResultUtil list() {
         ResultUtil result = userService.getList();
-        result.setTest_msg(secret+"只有管理员才能获取用户列表role:list");
         return result;
     }
 

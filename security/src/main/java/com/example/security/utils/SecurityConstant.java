@@ -40,4 +40,9 @@ public class SecurityConstant {
      */
     public final static String LOGIN_TOKEN_KEY = "login_tokens:";
 
+    /**
+     *  持证者 Bearer
+     */
+    public final static String BEARER = "Bearer";
+
 }

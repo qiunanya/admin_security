@@ -90,7 +90,6 @@ public class SecurityApplicationTests {
         String pwd = "123456";
         String encode = new BCryptPasswordEncoder().encode(pwd);
         System.out.println("加密密码："+encode);
-
     }
 
     @Test

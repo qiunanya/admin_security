@@ -64,9 +64,9 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
         //给用户设置角色权限信息
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-            // 获取角色集合
+        // 获取角色集合
         List<Role> roleList = iRoleService.getRoleListByUserId(userId);
-            // 获取权限集合
+        // 获取权限集合
         List<Permission> permissionList= iPermissionService.permissionListByUserId(userId);
             // 遍历角色
             if (!StringUtils.isEmpty(roleList)&&roleList.size()>0){

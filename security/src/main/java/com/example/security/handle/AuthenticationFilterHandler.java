@@ -64,17 +64,18 @@ public class AuthenticationFilterHandler extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        String header = request.getHeader(SecurityConstant.HEADER);
-        if (StringUtils.isEmpty(header)){
-            header = request.getParameter(SecurityConstant.HEADER);
-        }
+        String[] header = request.getHeader(SecurityConstant.HEADER).split(" ");
+
         if (StringUtils.isEmpty(header)){
             chain.doFilter(request,response);
             return;
         }
-
+        if (!header[0].equals(SecurityConstant.BEARER)){
+            ResponseUtil.out(response,ResponseUtil.resultMap(false,403,"token 错误！请检查"));
+            return;
+        }
         try {
-            UsernamePasswordAuthenticationToken authentication = getAuthentication(header, response);
+            UsernamePasswordAuthenticationToken authentication = getAuthentication(header[1], response);
             if (!StringUtils.isEmpty(authentication)){
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             }
@@ -131,9 +132,6 @@ public class AuthenticationFilterHandler extends BasicAuthenticationFilter {
         }else {
             return null;
         }
-
-
-
     }
 
 }
