@@ -35,3 +35,7 @@
 
 #### 5、@PreFilter  
 说明：在方法执行之前执行，而且这里可以调用方法的参数，然后对参数值进行过滤或处理或修改
+
+### 踩坑提醒：
+1、使用@PreAuthorize("hasAuthority('ROLE_BOSS')")时，必须加上角色ROLE_,否则security报无权限错误
+

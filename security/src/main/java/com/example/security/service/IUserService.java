@@ -13,7 +13,15 @@ import com.example.security.utils.ResultUtil;
 public interface IUserService extends IService<UserEntity> {
 
     ResultUtil getList();
-
+    /**
+      * <p>
+      *  根据用户名查找用户信息
+      * </p>
+      * @param username
+      * @return UserEntity
+      * @author qiu
+      * @since 2020-08-23
+      */
     UserEntity findUserByName(String username);
 
 }
