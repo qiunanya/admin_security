@@ -90,9 +90,7 @@ public class AuthenticationFilterHandler extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthentication(String header,HttpServletResponse response){
         String username = "";
-
         List<GrantedAuthority> authorities = new ArrayList<>();
-
         try {
             Claims claims = Jwts
                     .parser()
@@ -100,7 +98,6 @@ public class AuthenticationFilterHandler extends BasicAuthenticationFilter {
                     .parseClaimsJws(header)
                     .getBody();
             username = claims.getSubject();
-
             // 读取缓存权限，直接读取数据
             AuthorityEntity authority = redisCacheProject.getCacheAuthority(StaticConstant.AUTHORITIES+username);
             if (!StringUtils.isEmpty(authority.getList())){

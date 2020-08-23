@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -70,7 +71,6 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityUtils securityUtil;
 
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -119,16 +119,10 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
         * @Author QiuKing
         * @Date 2020/3/19 17:11
         */
-
-        security.csrf().disable()
+        security
+                .csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers("/user/test")
-                .permitAll()
-                .antMatchers("/user/level1")
-                .hasRole("学徒")
-                .antMatchers("/user/level2")
-                .hasAuthority("内门弟子")
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").anonymous()
@@ -137,9 +131,9 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .formLogin()
-                .loginPage("/user/unLogin")
+                .loginPage("/sys_user/unLogin")
                 .permitAll()
-                .loginProcessingUrl("/do/login")
+                .loginProcessingUrl("/login")
                 .permitAll()
                 .successHandler(successHandler)
                 .failureHandler(failHandler)
@@ -166,10 +160,24 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 //super.configure(security);
     }
 
+    /**
+     * 放行不需要权限的接口
+     * @param web
+     */
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+                .antMatchers("/swagger-ui.html")
+                .antMatchers("/doc.html")
+                .antMatchers("/swagger-resources/**")
+                .antMatchers("/webjars/**")
+                .antMatchers("/sys_user/test")
+                .antMatchers("/*/api-docs-ext");
+    }
+
     @Bean
     public PasswordEncoder passwordEncoderBean() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

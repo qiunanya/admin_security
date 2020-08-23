@@ -1,6 +1,5 @@
 package com.example.security.config;
 
-import com.example.security.entitys.Role;
 import com.example.security.entitys.UserEntity;
 import com.example.security.utils.StaticConstant;
 import lombok.Data;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * <p>
@@ -44,7 +42,7 @@ public class SecurityUserDetailsImpl implements UserDetails, Serializable {
         return user.getAuthorities();
     }
 
-    public SecurityUserDetailsImpl(UserEntity user, Collection<? extends GrantedAuthority> authorities, List<Role> roles, String token){
+    public SecurityUserDetailsImpl(UserEntity user, Collection<? extends GrantedAuthority> authorities, String token){
         // 引入用户实体类并赋值
         this.user = user;
     }

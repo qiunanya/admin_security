@@ -23,3 +23,7 @@ jwt:
   secret: NanYaQiu
   expiration: 3600
   rememberExpiration: 604800
+
+swagger:
+  enable: true
+

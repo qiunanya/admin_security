@@ -1,14 +1,12 @@
 package com.example.security.config;
 
 import com.example.security.entitys.Permission;
-import com.example.security.entitys.Role;
 import com.example.security.entitys.UserEntity;
 import com.example.security.framework.RedisCacheProject;
 import com.example.security.service.IPermissionService;
 import com.example.security.service.IRoleService;
 import com.example.security.service.IUserService;
 import com.example.security.utils.JwtTokenUtil;
-import com.example.security.utils.StaticConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,34 +61,18 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
 
         //给用户设置角色权限信息
         List<GrantedAuthority> authorities = new ArrayList<>();
-
-        // 获取角色集合
-        List<Role> roleList = iRoleService.getRoleListByUserId(userId);
         // 获取权限集合
         List<Permission> permissionList= iPermissionService.permissionListByUserId(userId);
-            // 遍历角色
-            if (!StringUtils.isEmpty(roleList)&&roleList.size()>0){
-                roleList.forEach(e->{
-                    SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(e.getRoleName());
-                    authorities.add(simpleGrantedAuthority);
-                });
-            }
-            // 遍历权限
-            if (!StringUtils.isEmpty(permissionList)&&permissionList.size()>0){
-                permissionList.forEach(e->{
-                    SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(e.getPermissionName());
-                    authorities.add(simpleGrantedAuthority);
-                });
-            }
-
-        if (StaticConstant.ZERO.equals(roleList.size())&&StaticConstant.ZERO.equals(permissionList.size())){
-            SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_NO_AUTHORITIES");
-            authorities.add(simpleGrantedAuthority);
+         // 遍历权限
+        if (!StringUtils.isEmpty(permissionList)&&permissionList.size()>0){
+            permissionList.forEach(e->{
+                SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(e.getPermissionName());
+                authorities.add(simpleGrantedAuthority);
+            });
         }
-
         // 创建token返回前端
         String token = jwtTokenUtil.createToken(user);
-        SecurityUserDetailsImpl admin = new SecurityUserDetailsImpl(user, authorities,roleList,token);
+        SecurityUserDetailsImpl admin = new SecurityUserDetailsImpl(user, authorities,token);
         return admin;
     }
 

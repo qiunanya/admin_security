@@ -10,7 +10,7 @@ import java.util.List;
  * @description:角色资源
  */
 @Data
-public class PermissionDto {
+public class PermissionDTO {
 
     /**
      * url
