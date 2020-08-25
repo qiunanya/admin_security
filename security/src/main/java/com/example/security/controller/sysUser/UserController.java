@@ -1,4 +1,4 @@
-package com.example.security.controller;
+package com.example.security.controller.sysUser;
 
 
 import com.example.security.service.IUserService;

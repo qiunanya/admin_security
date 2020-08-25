@@ -1,9 +1,8 @@
 package com.example.security.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.security.entitys.Permission;
-import com.example.security.mapper.PermissionMapper;
+import com.example.security.mapper.permission.PermissionMapper;
 import com.example.security.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

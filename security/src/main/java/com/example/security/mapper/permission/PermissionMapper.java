@@ -1,4 +1,4 @@
-package com.example.security.mapper;
+package com.example.security.mapper.permission;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.security.entitys.Permission;

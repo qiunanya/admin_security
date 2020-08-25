@@ -3,7 +3,7 @@ package com.example.security.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.security.entitys.UserEntity;
-import com.example.security.mapper.UserMapper;
+import com.example.security.mapper.sysUser.UserMapper;
 import com.example.security.service.IUserService;
 import com.example.security.utils.StaticConstant;
 import com.example.security.utils.ResultUtil;

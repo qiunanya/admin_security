@@ -2,7 +2,7 @@ package com.example.security.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.security.entitys.Role;
-import com.example.security.mapper.RoleMapper;
+import com.example.security.mapper.role.RoleMapper;
 import com.example.security.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
