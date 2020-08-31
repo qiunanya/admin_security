@@ -1,7 +1,7 @@
 package com.example.security.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.security.entitys.Role;
+import com.example.security.entitys.SysRole;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
    * @since 2020-03-87
    */
 
-public interface IRoleService extends IService<Role> {
+public interface IRoleService extends IService<SysRole> {
 
      /**
        * <p>
@@ -23,7 +23,7 @@ public interface IRoleService extends IService<Role> {
        * @param userId
        * @author qiu
        * @since 2020-03-87
-       * @return List<Role>
+       * @return List<SysRole>
        */
-     List<Role> getRoleListByUserId(String userId);
+     List<SysRole> getRoleListByUserId(String userId);
 }

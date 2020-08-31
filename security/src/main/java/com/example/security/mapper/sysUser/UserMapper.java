@@ -1,7 +1,7 @@
 package com.example.security.mapper.sysUser;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.security.entitys.UserEntity;
+import com.example.security.entitys.SysUser;
 import org.springframework.stereotype.Repository;
 /**
 * 描述: <br>
@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 */
 
 @Repository
-public interface UserMapper extends BaseMapper<UserEntity> {
+public interface UserMapper extends BaseMapper<SysUser> {
 
 }

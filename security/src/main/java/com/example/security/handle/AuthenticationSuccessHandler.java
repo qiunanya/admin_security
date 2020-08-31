@@ -1,21 +1,15 @@
 package com.example.security.handle;
 
-import com.example.security.config.SecurityUserDetailsImpl;
+import com.example.security.config.LoginUserDetails;
 import com.example.security.framework.RedisCacheProject;
 import com.example.security.framework.TokenProperties;
 import com.example.security.utils.JwtTokenUtil;
 import com.example.security.utils.ResponseUtil;
-import com.example.security.utils.UUIDUtil;
-import io.jsonwebtoken.Clock;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.DefaultClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 
 /**
   * <p>
@@ -47,8 +40,6 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
     @Autowired
     private RedisCacheProject redisCacheProject;
 
-    private Clock clock = DefaultClock.INSTANCE;
-
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -63,30 +54,11 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-        //super.onAuthenticationSuccess(request, response, authentication);
-        String username = ((UserDetails)authentication.getPrincipal()).getUsername();
-        SecurityUserDetailsImpl userDetails = (SecurityUserDetailsImpl) authentication.getPrincipal();
-        // 权限缓存到redis
-//        List<GrantedAuthority> authorities = ( List<GrantedAuthority> )((UserDetails)authentication.getPrincipal()).getAuthorities();
-//
-//        List<String> list = new ArrayList<>();
-//        authorities.forEach(e->list.add(e.getAuthority()));
-//
-//        AuthorityEntity authorityEntity = AuthorityEntity.builder().username(username).list(list).build();
-//        // 权限放入缓存
-//        redisCacheProject.setCacheAuthority(StaticConstant.AUTHORITIES + username, authorityEntity);
-
-        Date createTime = clock.now();
-
-        String token = Jwts.builder().setId(UUIDUtil.createId())
-                .setSubject(username)
-                .setIssuedAt(createTime)
-                .setExpiration(new Date(System.currentTimeMillis() + tokenProperties.getExpiration() * 60 * 1000))
-                .signWith(SignatureAlgorithm.HS512, tokenProperties.getSecret())
-                .compact();
+        LoginUserDetails userDetails = (LoginUserDetails) authentication.getPrincipal();
+        // 创建token返回前端
+        String token = jwtTokenUtil.createToken(userDetails.getUsername(),userDetails.getUserId());
         logger.info("登录成功 : onAuthenticationSuccess");
-        ResponseUtil.out(response,ResponseUtil.resultMap(true,200,"登录成功",token,userDetails));
-
+        ResponseUtil.out(response, ResponseUtil.resultMap(true,200,"登录成功",token,userDetails));
 
     }
 }

@@ -1,7 +1,8 @@
 package com.example.security.config;
 
-import com.example.security.entitys.Permission;
-import com.example.security.entitys.UserEntity;
+import cn.hutool.core.util.ObjectUtil;
+import com.example.security.entitys.SysPermission;
+import com.example.security.entitys.SysUser;
 import com.example.security.framework.RedisCacheProject;
 import com.example.security.service.IPermissionService;
 import com.example.security.service.IRoleService;
@@ -47,33 +48,27 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = iUserService.findUserByName(username);
-        if (StringUtils.isEmpty(user)){
+        SysUser sysUser = iUserService.findUserByName(username);
+        if (ObjectUtil.isEmpty(sysUser)){
             logger.debug("用户不存在");
             throw new UsernameNotFoundException("用户不存在");
         } else {
-            return createLoginUser(user);
+            String userId = sysUser.getUserId();
+            //给用户设置角色权限信息
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            // 获取权限集合
+            System.out.println("用户id=>"+userId);
+            List<SysPermission> permissionList= iPermissionService.permissionListByUserId(userId);
+            // 遍历权限
+            if (!StringUtils.isEmpty(permissionList)&&permissionList.size()>0){
+                permissionList.forEach(e->{
+                    authorities.add(new SimpleGrantedAuthority(e.getPermissionName()));
+                });
+            }
+            return new LoginUserDetails(userId,sysUser.getName(),sysUser.getUserPassword(),
+                       sysUser.getUserStatus(),sysUser.getAccountStatus(),
+                       sysUser.getForbiddenStatus(),sysUser.getLockStatus(),authorities);
         }
-    }
-
-    private SecurityUserDetailsImpl createLoginUser(UserEntity user){
-        String userId = user.getUserId();
-
-        //给用户设置角色权限信息
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        // 获取权限集合
-        List<Permission> permissionList= iPermissionService.permissionListByUserId(userId);
-         // 遍历权限
-        if (!StringUtils.isEmpty(permissionList)&&permissionList.size()>0){
-            permissionList.forEach(e->{
-                SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(e.getPermissionName());
-                authorities.add(simpleGrantedAuthority);
-            });
-        }
-        // 创建token返回前端
-        String token = jwtTokenUtil.createToken(user);
-        SecurityUserDetailsImpl admin = new SecurityUserDetailsImpl(user, authorities,token);
-        return admin;
     }
 
 }

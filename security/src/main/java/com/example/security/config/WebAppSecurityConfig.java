@@ -76,21 +76,8 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
         // 1、内存登录
-//        builder.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
-//                .withUser("qiuny")
-//                .password(new BCryptPasswordEncoder().encode("123456"))
-//                .roles("ADMIN","学徒")
-//                .and()
-//                .withUser("yangy")
-//                .password(new BCryptPasswordEncoder().encode("123456"))
-//                .roles("BOSS")
-//                .authorities("ADD","DELETE","UPDATE","SELECT","内门弟子")
-//                ;
-
         // 2、数据库登录
         builder.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoderBean());
-
-        // super.configure(builder);
     }
 
     @Override
@@ -143,6 +130,7 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unAuthentication)
                 .and()
+                //前后端分离采用JWT 不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling()
@@ -155,9 +143,7 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.logoutSuccessUrl("/user/logoutSuccess").permitAll()
                 .and()
                 //添加token验证过滤器 除已配置的其它请求都需经过此过滤器
-                .addFilter(new AuthenticationFilterHandler(authenticationManager(),tokenProperties, redisCacheProject, securityUtil));
-
-                //super.configure(security);
+                .addFilter(new AuthenticationFilterHandler(authenticationManager()));
     }
 
     /**
@@ -179,5 +165,6 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoderBean() {
         return new BCryptPasswordEncoder();
     }
+
 
 }

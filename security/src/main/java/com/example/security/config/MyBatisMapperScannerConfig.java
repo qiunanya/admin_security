@@ -24,4 +24,6 @@ public class MyBatisMapperScannerConfig {
         mapperScannerConfigurer.setBasePackage("com.example.security.mapper");
         return mapperScannerConfigurer;
     }
+
+
 }

@@ -1,7 +1,7 @@
 package com.example.security.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.security.entitys.Permission;
+import com.example.security.entitys.SysPermission;
 import com.example.security.mapper.permission.PermissionMapper;
 import com.example.security.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ import java.util.List;
    * @since 2020-03-87
    */
 @Service
-public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService {
+public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, SysPermission> implements IPermissionService {
   @Autowired
   private PermissionMapper permissionMapper;
 
  @Override
- public List<Permission> permissionListByUserId(String userId) {
-  List<Permission> list = permissionMapper.permissionListByUserId(userId);
+ public List<SysPermission> permissionListByUserId(String userId) {
+  List<SysPermission> list = permissionMapper.permissionListByUserId(userId);
   return list;
  }
 }

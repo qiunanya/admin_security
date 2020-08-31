@@ -1,11 +1,12 @@
 package com.example.security.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.example.security.config.SecurityUserDetailsImpl;
-import com.example.security.entitys.UserEntity;
+import com.example.security.config.LoginUserDetails;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClock;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +56,8 @@ public class JwtTokenUtil {
     @Value("${jwt.rememberExpiration}")
     private Long rememberExpiration;
 
+    private Clock clock = DefaultClock.INSTANCE;
+
 
     /**
      * 生成token
@@ -62,13 +65,16 @@ public class JwtTokenUtil {
      * @param userEntity
      * @return
      */
-    public String createToken(UserEntity userEntity) {
+    public String createToken(String username,String id) {
+        Date createTime = clock.now();
         Map<String, Object> map = new HashMap<>(1);
-        map.put("user", userEntity.getUserName());
-        map.put("id", userEntity.getUserName());
-        return Jwts.builder()
+        map.put("user", username);
+        map.put("id", id);
+        return StaticConstant.BEARER+" "+Jwts.builder()
                 .setClaims(map)
-                .setSubject(userEntity.getUserName())
+                .setId(id)
+                .setSubject(username)
+                .setIssuedAt(createTime)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration *60 * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
@@ -104,10 +110,10 @@ public class JwtTokenUtil {
      * @param token
      * @return
      */
-    public SecurityUserDetailsImpl getUserDTO(String token) {
+    public LoginUserDetails getUserDTO(String token) {
         Claims claims = generateToken(token);
         Map<String, String> map = claims.get("user", Map.class);
-        SecurityUserDetailsImpl userDTO = JSON.parseObject(JSON.toJSONString(map), SecurityUserDetailsImpl.class);
+        LoginUserDetails userDTO = JSON.parseObject(JSON.toJSONString(map), LoginUserDetails.class);
         return userDTO;
     }
 

@@ -1,9 +1,9 @@
 package com.example.security;
 
 import com.example.security.entitys.AuthorityEntity;
-import com.example.security.entitys.Permission;
-import com.example.security.entitys.Role;
-import com.example.security.entitys.UserEntity;
+import com.example.security.entitys.SysPermission;
+import com.example.security.entitys.SysRole;
+import com.example.security.entitys.SysUser;
 import com.example.security.framework.RedisCacheProject;
 import com.example.security.service.IPermissionService;
 import com.example.security.service.IRoleService;
@@ -49,14 +49,14 @@ public class SecurityApplicationTests {
     RedisCacheProject redisCacheProject;
 
     @Autowired
-    RedisTemplate<Object, UserEntity> userEntityRedisTemplate;
+    RedisTemplate<Object, SysUser> userEntityRedisTemplate;
 
 
     @Test
     public void redisTest(){
-        UserEntity entity = new UserEntity();
+        SysUser entity = new SysUser();
         entity.setUserId("123");
-        entity.setUserName("邱南亚");
+        entity.setName("邱南亚");
         entity.setUserCreateTime("2020-3-24");
         // redisCacheProject.setCacheObject(StaticConstant.LOGIN_MARK,entity);
        // userEntityRedisTemplate.opsForValue().set("qiuny",entity);
@@ -66,7 +66,7 @@ public class SecurityApplicationTests {
     public void getObject(){
         Object qiuny = userEntityRedisTemplate.opsForValue().get("qiuny");
 
-        System.out.println("获取对象为："+ ((UserEntity) qiuny).getUserName());
+        System.out.println("获取对象为："+ ((SysUser) qiuny).getName());
     }
 
     @Test
@@ -95,14 +95,14 @@ public class SecurityApplicationTests {
     @Test
     public void getPermissionList(){
         String userId = "1601e658096048f48225c50f7e879a02";
-        List<Permission> list = iPermissionService.permissionListByUserId(userId);
+        List<SysPermission> list = iPermissionService.permissionListByUserId(userId);
         System.out.println("用户的权限集合："+list);
     }
 
     @Test
     public void getRoleList(){
         String userId = "1601e658096048f48225c50f7e879a02";
-        List<Role> list = iRoleService.getRoleListByUserId(userId);
+        List<SysRole> list = iRoleService.getRoleListByUserId(userId);
         System.out.println("用户的角色集合："+list);
     }
     // 生成token

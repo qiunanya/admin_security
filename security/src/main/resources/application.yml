@@ -1,15 +1,32 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/security-jwt?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://39.106.29.92:3306/picture_core?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8
     username: root
     password: 123456
+    hikari:
+      connection-timeout: 60000 #指定连接的超时时间，毫秒单位.
+      read-only: false # 当使用Hikari connection pool时，是否标记数据源只读
+      idle-timeout: 60000 #指定连接多久没被使用时，被设置为空闲，默认为10ms
+      max-lifetime: 60000 #指定连接池中连接的最大生存时间，毫秒单位.
+      maximum-pool-size: 60 #指定连接池最大的连接数，包括使用中的和空闲的连接.
+      minimum-idle: 10 #指定连接维护的最小空闲连接数，当使用HikariCP时指定.
+      login-timeout: 5 #指定连接数据库的超时时间.
+      validation-timeout: 3000 #设定连接校验的超时时间，当使用Hikari connection pool时指定
   jpa:
     show-sql: true
 
 mybatis-plus:
-  mapper-locations: classpath:/mapper/*Mapper.xml
-  type-aliases-package: com.example.entity
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.security.entitys
+  global-config:
+    db-config:
+      #主键类型 AUTO:"数据库ID自增" INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: UUID
+      #字段策略 IGNORED:"忽略判断"  NOT_NULL:"非 NULL 判断")  NOT_EMPTY:"非空判断"
+     # field-strategy: NOT_EMPTY
+      #数据库类型
+      db-type: MYSQL
   configuration:
     map-underscore-to-camel-case: true
 

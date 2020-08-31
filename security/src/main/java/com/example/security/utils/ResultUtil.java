@@ -2,6 +2,8 @@ package com.example.security.utils;
 
 
 import com.example.security.enums.ResultEnum;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 /**
 * 描述: <br>
@@ -10,16 +12,15 @@ import lombok.Data;
 */
 
 @Data
+@ApiModel(value = "响应体")
 public class ResultUtil<T> {
-
+    @ApiModelProperty(value = "响应代码")
     private Integer code;
-
-    private String msg;
-
+    @ApiModelProperty(value = "状态标识")
+    private ResultEnum message;
+    @ApiModelProperty(value = "是否成功 true成功，false失败")
     private boolean success;
-
-    private String test_msg;
-
+    @ApiModelProperty(value = "响应体")
     private T data;
 
     public ResultUtil() {
@@ -36,31 +37,11 @@ public class ResultUtil<T> {
         resultUtil.setCode(200);
         resultUtil.setSuccess(true);
         resultUtil.setData(data);
-        resultUtil.setMsg("请求成功");
+        resultUtil.setMessage(ResultEnum.ACCESS_REQUEST_SUCCESS);
         return resultUtil;
     }
 
-    public static ResultUtil loginSuccess(Object data) {
-        ResultUtil resultUtil = new ResultUtil();
-        resultUtil.setCode(200);
-        resultUtil.setSuccess(true);
-        resultUtil.setData(data);
-        resultUtil.setMsg("登录成功");
-        return resultUtil;
-    }
 
-    /**
-     * 成功
-     *
-     * @return
-     */
-    public static ResultUtil success(String... msg) {
-        ResultUtil resultUtil = new ResultUtil();
-        resultUtil.setCode(0);
-        resultUtil.setSuccess(true);
-        resultUtil.setMsg(msg.toString());
-        return resultUtil;
-    }
 
     /**
      * 错误返回
@@ -72,7 +53,7 @@ public class ResultUtil<T> {
         ResultUtil resultUtil = new ResultUtil();
         resultUtil.setSuccess(false);
         resultUtil.setCode(resultEnum.getCode());
-        resultUtil.setMsg(resultEnum.getMsg());
+        resultUtil.setMessage(ResultEnum.ACCESS_REQUEST_SUCCESS);
         return resultUtil;
     }
 
@@ -86,7 +67,7 @@ public class ResultUtil<T> {
         ResultUtil resultUtil = new ResultUtil();
         resultUtil.setSuccess(false);
         resultUtil.setCode(-1);
-        resultUtil.setMsg(msg);
+        resultUtil.setMessage(ResultEnum.ACCESS_REQUEST_FAIL);
         return resultUtil;
     }
 }

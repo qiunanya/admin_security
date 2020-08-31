@@ -1,12 +1,13 @@
 package com.example.security.entitys;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-
  /**
    * <p>
    * 角色表 服务实现类
@@ -18,35 +19,20 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class Permission implements Serializable {
+@TableName("sys_role")
+public class SysRole implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 权限编号
-     */
     @TableId
-    private String permissionId;
+    @ApiModelProperty(value = "角色ID")
+    private String roleId;
 
-     /**
-      * 权限标识
-      */
-     private String permissionName;
+    @ApiModelProperty(value = "角色名称")
+    private String roleName;
 
-    /**
-     * 授权url
-     */
-    private String permissionUrl;
-
-    /**
-     * 描述
-     */
-    private String permissionComment;
-
-    /**
-     * 权限状态,0正常，-1删除
-     */
-    private String permissionStatus;
+    @ApiModelProperty(value = "角色状态，0正常，-1删除")
+    private String roleStatus;
 
 
 }

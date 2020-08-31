@@ -1,6 +1,9 @@
 package com.example.security.controller.sysUser;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.security.dto.user.FindUserDTO;
+import com.example.security.entitys.SysUser;
 import com.example.security.service.IUserService;
 import com.example.security.utils.ResultUtil;
 import io.swagger.annotations.Api;
@@ -11,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
 * 描述: 用户接口
@@ -42,19 +43,23 @@ public class UserController {
     private StringRedisTemplate stringRedisTemplate;
 
 
-
-
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('role:list')")
     @ApiOperation("获取用户列表")
     public ResultUtil list() {
-        ResultUtil result = userService.getList();
-        return result;
+        return userService.getList();
+    }
+
+    @PostMapping("/getPage")
+    @PreAuthorize("hasAuthority('sys:user:page')")
+    @ApiOperation("获取用户列表")
+    public IPage<SysUser> getPage(@RequestBody FindUserDTO findUserDTO) {
+        return userService.getPage(findUserDTO);
     }
 
     @GetMapping("/test")
     public ResultUtil test(){
-        return  ResultUtil.success("不需要登录也能访问我");
+        return  ResultUtil.success("不用登录就能访问我");
     }
 
     @GetMapping("/unLogin")

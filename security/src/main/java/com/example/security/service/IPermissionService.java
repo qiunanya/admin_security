@@ -1,7 +1,8 @@
 package com.example.security.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.security.entitys.Permission;
+import com.example.security.entitys.SysPermission;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -13,7 +14,8 @@ import java.util.List;
    * @author qiu
    * @since 2020-03-87
    */
-public interface IPermissionService extends IService<Permission> {
+@Mapper
+public interface IPermissionService extends IService<SysPermission> {
   /**
     * <p>
     *  根据用户id获取权限集合
@@ -21,8 +23,8 @@ public interface IPermissionService extends IService<Permission> {
     * @param userId 用户id
     * @author qiu
     * @since 2020-03-87
-    * @return List<Permission>
+    * @return List<SysPermission>
     */
- List<Permission> permissionListByUserId (String userId);
+ List<SysPermission> permissionListByUserId (String userId);
 
 }

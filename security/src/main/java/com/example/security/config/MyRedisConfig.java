@@ -1,7 +1,7 @@
 package com.example.security.config;
 
 import com.example.security.entitys.AuthorityEntity;
-import com.example.security.entitys.UserEntity;
+import com.example.security.entitys.SysUser;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,15 +61,15 @@ public class MyRedisConfig {
       * <p>
       *  改变默认的序列化器
       * </p>
-      *RedisTemplate<Object, UserEntity>  UserEntity改变json方式存储redis
+      *RedisTemplate<Object, SysUser>  UserEntity改变json方式存储redis
       * @author qiu
       * @since 2020-04-97
       */
     @Bean
-    public RedisTemplate<Object, UserEntity> userEntityRedisTemplate(RedisConnectionFactory factory) throws UnknownHostException {
-        RedisTemplate<Object, UserEntity> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<Object, SysUser> userEntityRedisTemplate(RedisConnectionFactory factory) throws UnknownHostException {
+        RedisTemplate<Object, SysUser> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
-        Jackson2JsonRedisSerializer<UserEntity> jsonRedisSerializer = new Jackson2JsonRedisSerializer<>(UserEntity.class);
+        Jackson2JsonRedisSerializer<SysUser> jsonRedisSerializer = new Jackson2JsonRedisSerializer<>(SysUser.class);
         redisTemplate.setDefaultSerializer(jsonRedisSerializer);
         return redisTemplate;
     }

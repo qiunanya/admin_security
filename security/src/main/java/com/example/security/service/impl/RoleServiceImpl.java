@@ -1,7 +1,7 @@
 package com.example.security.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.security.entitys.Role;
+import com.example.security.entitys.SysRole;
 import com.example.security.mapper.role.RoleMapper;
 import com.example.security.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,13 @@ import java.util.List;
    * @since 2020-03-87
    */
 @Service
-public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
+public class RoleServiceImpl extends ServiceImpl<RoleMapper, SysRole> implements IRoleService {
 
     @Autowired
     private RoleMapper roleMapper;
 
     @Override
-    public List<Role> getRoleListByUserId(String userId) {
+    public List<SysRole> getRoleListByUserId(String userId) {
 
         return roleMapper.getRoleListByUserId(userId);
     }

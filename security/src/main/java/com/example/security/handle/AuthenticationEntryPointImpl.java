@@ -33,7 +33,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
         logger.error(e.getMessage());
 
         String msg = StaticConstant.UNAUTHORIZED+":"+request.getRequestURI();
-        ResponseUtil.out(response,ResponseUtil.resultMap(false,201,msg));
+        ResponseUtil.out(response,ResponseUtil.resultMap(false,201,e.getMessage()));
 
     }
 }

@@ -1,8 +1,6 @@
 package com.example.security.framework;
 
-import com.example.security.entitys.Permission;
-import com.example.security.entitys.Role;
-import com.example.security.entitys.UserEntity;
+import com.example.security.entitys.SysPermission;
 import com.example.security.service.IPermissionService;
 import com.example.security.service.IRoleService;
 import com.example.security.service.IUserService;
@@ -40,10 +38,7 @@ public class SecurityUtils {
     /**
      * 获取当前用户信息
      */
-    public UserEntity currentUser(){
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return iUserService.findUserByName(userDetails.getUsername());
-    }
+
 
     /**
      * 获取当前用户ming
@@ -60,21 +55,12 @@ public class SecurityUtils {
      */
     public List<GrantedAuthority> getCurrUserPerms(String username) {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        List<Permission> permissions = iPermissionService.permissionListByUserId(iUserService.findUserByName(username).getUserId());
-        List<Role> roleList = iRoleService.getRoleListByUserId(iUserService.findUserByName(username).getUserId());
+        List<SysPermission> permissions = iPermissionService.permissionListByUserId(iUserService.findUserByName(username).getUserId());
         if (!StringUtils.isEmpty(permissions)){
-            for (Permission p : permissions) {
+            for (SysPermission p : permissions) {
                 authorities.add(new SimpleGrantedAuthority(p.getPermissionName()));
             }
         }
-
-        if (!StringUtils.isEmpty(roleList)&&roleList.size()>0){
-            roleList.forEach(e->{
-                SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(e.getRoleName());
-                authorities.add(simpleGrantedAuthority);
-            });
-        }
-
         return authorities;
     }
 

@@ -9,6 +9,8 @@ public class StaticConstant {
 
     public final static Integer ZERO = 0;
 
+    public final static Integer ONE = 1;
+
     public final static String LOGIN_FAIL = "登录失败";
 
     public final static String LOGOUT_SUCCESS = "退出成功";
@@ -30,5 +32,8 @@ public class StaticConstant {
     public final static String AUTHORITIES = "authorities";
 
     public final static String LOGIN_MARK = "new_app";
+
+    // 持证标识
+    public final static String BEARER = "Bearer";
 
 }

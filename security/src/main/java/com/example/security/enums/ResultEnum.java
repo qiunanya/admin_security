@@ -11,6 +11,8 @@ import lombok.Getter;
   */
 @Getter
 public enum ResultEnum {
+    ACCESS_REQUEST_SUCCESS(200,"请求成功"),
+    ACCESS_REQUEST_FAIL(201,"请求失败"),
     ACCESS_NOT(501, "权限不足"),
 
     TOKEN_IS_NOT_VALID(502, "token无效，请重新登录"),

@@ -1,7 +1,7 @@
 package com.example.security.mapper.permission;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.security.entitys.Permission;
+import com.example.security.entitys.SysPermission;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
    * @since 2020-03-87
    */
 @Repository
-public interface PermissionMapper extends BaseMapper<Permission> {
+public interface PermissionMapper extends BaseMapper<SysPermission> {
       /**
         * <p>
         *  根据用户id获取权限集合
@@ -23,7 +23,7 @@ public interface PermissionMapper extends BaseMapper<Permission> {
         * @param userId 用户id
         * @author qiu
         * @since 2020-03-87
-        * @return  List<Permission>
+        * @return  List<SysPermission>
         */
-     List<Permission> permissionListByUserId(String userId);
+     List<SysPermission> permissionListByUserId(String userId);
  }

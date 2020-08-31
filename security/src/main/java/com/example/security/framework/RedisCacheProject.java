@@ -1,7 +1,7 @@
 package com.example.security.framework;
 
 import com.example.security.entitys.AuthorityEntity;
-import com.example.security.entitys.UserEntity;
+import com.example.security.entitys.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class RedisCacheProject implements Serializable {
     RedisTemplate<Object, AuthorityEntity> authorityRedisTemplate;
 
     @Autowired
-    RedisTemplate<Object , UserEntity> userEntityRedisTemplate;
+    RedisTemplate<Object , SysUser> userEntityRedisTemplate;
 
     /**
      * 自定义user缓存对象
@@ -39,9 +39,9 @@ public class RedisCacheProject implements Serializable {
      * @param userEntity
      * @return
      */
-    public boolean saveUserInfoCache(String key , UserEntity userEntity){
+    public boolean saveUserInfoCache(String key , SysUser userEntity){
         boolean flag = false;
-        ValueOperations<Object, UserEntity> operations = userEntityRedisTemplate.opsForValue();
+        ValueOperations<Object, SysUser> operations = userEntityRedisTemplate.opsForValue();
         try {
             operations.set(key,userEntity);
             flag = true;
@@ -55,9 +55,9 @@ public class RedisCacheProject implements Serializable {
     /**
      * 获取缓存
      */
-    public UserEntity getUserInfoCache(String key){
-        ValueOperations<Object, UserEntity> operations = userEntityRedisTemplate.opsForValue();
-        UserEntity userEntity = operations.get(key);
+    public SysUser getUserInfoCache(String key){
+        ValueOperations<Object, SysUser> operations = userEntityRedisTemplate.opsForValue();
+        SysUser userEntity = operations.get(key);
         return userEntity;
     }
 
